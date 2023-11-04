@@ -29,6 +29,8 @@ import io.github.rypofalem.armorstandeditor.protections.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
@@ -41,11 +43,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 //Manages PlayerEditors and Player Events related to editing armorstands
 public class PlayerEditorManager implements Listener {
@@ -403,7 +403,20 @@ public class PlayerEditorManager implements Listener {
                 Player player = (Player) e.getWhoClicked();
                 String command = item.getItemMeta().getPersistentDataContainer().get(plugin.getIconKey(), PersistentDataType.STRING);
                 if (command != null) {
-                    player.performCommand(command);
+                    CommandEx commandEx = new CommandEx(plugin);
+                    String[] args = command.split(" ");
+
+                    if (args.length > 1) {
+                        args = Arrays.copyOfRange(args, 1, args.length);
+
+                        commandEx.onCommand(player, new Command("ase") {
+                            @Override
+                            public boolean execute(@NotNull CommandSender commandSender, @NotNull String s, @NotNull String[] strings) {
+                                return false;
+                            }
+                        }, "", args);
+                    }
+
                     return;
                 }
             }
