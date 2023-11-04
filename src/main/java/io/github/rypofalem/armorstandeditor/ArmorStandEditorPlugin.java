@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -79,6 +80,10 @@ public class ArmorStandEditorPlugin extends JavaPlugin {
     List<?> editToolLore = null;
     boolean enablePerWorld = false;
     List<?> allowedWorldList = null;
+    boolean requireToolPDC = false;
+    String toolPDCNamespace = null;
+    String toolPDCKey = null;
+    boolean toolPDCValue = false;
     boolean allowCustomModelData = false;
     Integer customModelDataInt = Integer.MIN_VALUE;
 
@@ -243,6 +248,13 @@ public class ArmorStandEditorPlugin extends JavaPlugin {
             if (allowedWorldList != null && allowedWorldList.get(0).equals("*")) {
                 allowedWorldList = getServer().getWorlds().stream().map(World::getName).toList();
             }
+        }
+
+        requireToolPDC = getConfig().getBoolean("requireToolPDC", false);
+        if(requireToolPDC) {
+            toolPDCNamespace = getConfig().getString("toolPDCNamespace", null);
+            toolPDCKey = getConfig().getString("toolPDCKey", null);
+            toolPDCValue = getConfig().getBoolean("toolPDCValue", true);
         }
 
         //Require Sneaking - Wolfst0rm/ArmorStandEditor#17
@@ -515,6 +527,15 @@ public class ArmorStandEditorPlugin extends JavaPlugin {
 
         }
 
+        if(requireToolPDC && toolPDCNamespace != null && toolPDCKey != null){
+            //If the ItemStack does not have Metadata then we return false
+            if(!itemStk.hasItemMeta()) { return false; }
+
+            //Get the PDC of the Item and if it is null - Return False
+            Boolean itemPDC = itemMeta.getPersistentDataContainer().get(new NamespacedKey(toolPDCNamespace, toolPDCKey), PersistentDataType.BOOLEAN);
+            if (itemPDC == null || itemPDC != toolPDCValue) { return false; }
+        }
+
         if (allowCustomModelData && customModelDataInt != null) {
             //If the ItemStack does not have Metadata then we return false
             if (!itemStk.hasItemMeta()) {
@@ -586,13 +607,19 @@ public class ArmorStandEditorPlugin extends JavaPlugin {
             editToolLore = getConfig().getList("toolLore", null);
         }
 
-
         enablePerWorld = getConfig().getBoolean("enablePerWorldSupport", false);
         if(enablePerWorld) {
             allowedWorldList = getConfig().getList("allowed-worlds", null);
             if (allowedWorldList != null && allowedWorldList.get(0).equals("*")) {
                 allowedWorldList = getServer().getWorlds().stream().map(World::getName).toList();
             }
+        }
+
+        requireToolPDC = getConfig().getBoolean("requireToolPDC", false);
+        if(requireToolPDC) {
+            toolPDCNamespace = getConfig().getString("toolPDCNamespace", null);
+            toolPDCKey = getConfig().getString("toolPDCKey", null);
+            toolPDCValue = getConfig().getBoolean("toolPDCValue", true);
         }
 
         //Require Sneaking - Wolfst0rm/ArmorStandEditor#17
