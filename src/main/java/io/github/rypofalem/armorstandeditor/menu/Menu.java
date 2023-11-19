@@ -154,7 +154,7 @@ public class Menu {
             itemFrameVisible = new ItemStack(Material.ITEM_FRAME, 1);
             createIcon(itemFrameVisible, "itemframevisible", "mode itemframe");
         } else {
-            itemFrameVisible = null;
+            itemFrameVisible = blankSlot;
         }
 
         //Praise end
@@ -162,6 +162,8 @@ public class Menu {
         if (pe.getPlayer().hasPermission("asedit.toggleInvulnerability")) {
             toggleVulnerabilty = createIcon(new ItemStack(Material.TOTEM_OF_UNDYING, 1),
                 "vulnerability", "mode vulnerability");
+        } else {
+            toggleVulnerabilty = blankSlot;
         }
 
         if (pe.getPlayer().hasPermission("asedit.togglesize")) {
@@ -170,10 +172,14 @@ public class Menu {
         }
         if (pe.getPlayer().hasPermission("asedit.disableslots")) {
             disableSlots = createIcon(new ItemStack(Material.BARRIER), "disableslots", "mode disableslots");
+        } else {
+            disableSlots = blankSlot;
         }
 
         if (pe.getPlayer().hasPermission("asedit.togglegravity")) {
             gravity = createIcon(new ItemStack(Material.SAND), "gravity", "mode gravity");
+        } else {
+            gravity = blankSlot;
         }
 
         if (pe.getPlayer().hasPermission("asedit.togglebaseplate")) {
@@ -239,11 +245,11 @@ public class Menu {
 
         ItemStack[] items = {
                 blankSlot, blankSlot, blankSlot, xAxis, yAxis, zAxis, blankSlot, blankSlot, help,
-                copy, paste, blankSlot, playerHead, headPos, reset, blankSlot, itemFrameVisible, glowing,
-                slot1, slot2, blankSlot, rightArmPos, bodyPos, leftArmPos, blankSlot, rotate, place,
+                copy, paste, blankSlot, playerHead, headPos, reset, blankSlot, rotate, place,
+                slot1, slot2, blankSlot, rightArmPos, bodyPos, leftArmPos, blankSlot, itemFrameVisible, glowing,
                 slot3, slot4, blankSlot, rightLegPos, equipment, leftLegPos, blankSlot, coarseAdj, fineAdj,
                 blankSlot, blankSlot, blankSlot, blankSlot, blankSlot, blankSlot, blankSlot, blankSlot, blankSlot,
-                blankSlot, showArms, visibility, size, gravity, plate, toggleVulnerabilty, disableSlots, blankSlot
+                blankSlot, gravity, showArms, visibility, disableSlots, size, plate, toggleVulnerabilty, blankSlot
         };
 
         menuInv.setContents(items);
